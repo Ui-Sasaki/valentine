@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <title>Valentine's Card</title>
     <style>
+        /* Your original styles remain exactly the same */
         body {
             display: flex;
             flex-direction: column;
@@ -19,7 +21,7 @@
             font-weight: bold;
             margin-bottom: 20px;
             animation: bounce 1s infinite alternate;
-            color: darkred;
+            color: rgb(174, 23, 23);
             position: absolute;
             top: 30%;
             text-align: center;
@@ -78,6 +80,12 @@
             transition: opacity 1s ease-in-out, transform 1s ease-in-out;
             transform: translateY(20px);
             cursor: pointer;
+            font-family: "Shadows Into Light", serif;
+        }
+        .card p {
+        font-family: "Shadows Into Light", cursive;
+        font-size: 22px;
+        text-align: center;
         }
         .card img {
             width: 120px;
@@ -88,7 +96,7 @@
             opacity: 0;
         }
         .open .flap {
-            transform: rotateX(180deg);
+            transform: rotateX(540deg);
         }
         .open .card {
             opacity: 1;
@@ -97,28 +105,152 @@
         .open .message {
             opacity: 0;
         }
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            animation: float 6s linear infinite;
+            opacity: 0.6;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* New simple sparkle styles */
+        .sparkle {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #fedd00;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: spark 5.0s forwards;
+        }
+
+        @keyframes spark {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(540deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="hearts" id="hearts"></div>
     <div class="message">Open for a surprise! ↓</div>
     <div class="container" onclick="toggleEnvelope()">
         <div class="envelope">
             <div class="flap"></div>
         </div>
-        <div class="card" onclick="toggleEnvelope(event)">
-            <img src="valentine.gif" alt="Valentine GIF">
-            HAPPY VALENTINES♡<br>
-            Can't give choco but hope you feel the Valentine vibes! 😆 <br>
-            Stay happy n healthy ☆
+        <div class="card" id="card" onclick="toggleEnvelope(event)">
+            <img id="cardImage" src="" alt="Valentine GIF">
+            <p id="cardMessage"></p>
         </div>
     </div>
+
     <script>
-        function toggleEnvelope(event) {
-            if (event) {
-                event.stopPropagation(); // Prevents triggering both actions at once
+        // Your original card data
+        const cards = [
+    { img: "valentines gif.gif", message: "❤️ HAPPY VALENTINES ♡\nCan't give choco but hope you feel the Valentine vibes! 😆 \nStay happy n healthy ☆", color: "#C85A5A" },
+    { img: "valentines.1.gif", message: "💖 YOU'RE AMAZING 💖\nHope today is as special as you are\nIly, take care:D", color: "#D77FA1" },
+    { img: "valentines.2.gif", message: "🌹 A SWEET GIFT FOR YOU 🌹\nSending all the love you deserve♡\nstay safe and remember do hydrate!!", color: "#6D9F71" },
+    { img: "valentines.3.gif", message: "🍫 Not rly chocolates but BUT a message instead! 🍫\nA virtual hug just for you!\ntake care of yourself<3", color: "#B97A57" }, 
+    { img: "valentines.4.gif", message: "✨ KEEP SHINING ✨\nYou make the world brighter!\nI sincerely hope your life or at least day.. IS GONA BE AMAZING!", color: "#E1B872" },
+    { img: "valentines.5.gif", message: "💪 I see you trying! 💪\nIk your'll be an amazing human, keep doing what you love!!", color: "#A87CB1" },
+    { img: "valentines.6.gif", message: "🫢 It's valentines 🫢 \nNever give up hope and you'll def succeed!\nI'm always cheering for you🫶", color: "#D56A6A" }, 
+    { img: "valentines.7.gif", message: "🎉 You Found A Special One! 🎉\nGo do 5 pushups for a piece of chocolate🍫 (jk, have a great daay)", color: "#E6A57D" }, 
+    { img: "valentines.8.gif", message: "👻 Boo! 👻\nHave you done all your chores?\nIf not, go do it!\nYou might make some proud-", color: "#A18EBE" }, 
+    { img: "valentines.9.gif", message: "☘️ Here's a clover for you! ☘️\nI hope you have the best day ever with your friends, family, maybe even by yourself!🫶", color: "#8CA382" }, 
+    { img: "valentines.10.gif", message: "💤 You eepy? 💤 \nMake sure you get enough rest!\nIt's important to sleep for your health and brain:D", color: "#82A0C2" }, 
+    { img: "valentines.11.gif", message: "♡ LoVe?? ♡\nSomeone out there loves youuu, I wonder who it is😋", color: "#C881A7" }, 
+    { img: "valentines.12.gif", message: "😍 WaUuu so pretty! 😍\nYou stay safe with that amazing personality and looks!!\nHope you have the bestest day ever>:D", color: "#D98E5D" }, 
+    { img: "valentines.13.gif", message: "😖 You Look Down 😖\nKeep that head up and look forward you look better that way, have a hug:D", color: "#BB6B6B" }, 
+    { img: "valentines.14.gif", message: "🫣 It's valentines 🫣\nHow many chocolates did you get today?\nEven if you got none, here’s one from me<3 Take care you wonderful human!", color: "#DB85A0" }, 
+    { img: "valentines.15.gif", message: "🍙 Eating reminder! 🍙\nHave you eaten yet?\nIf you haven't, make sure to go get a snack or a meal:)", color: "#A48C6B" },
+    { img: "valentines.16.gif", message: "😝 Valentines?? 😝\nWe both know that you'll never have a Valentine\nKeep dreaming mate!!", color: "#5D5C61" }, 
+    { img: "valentines.17.gif", message: "🧐 Hmm 🧐\nHow old are you turning this year?\nHope you have a wonderful year whatever age or gender you are<3", color: "#EBCCFF"},
+
+    ];
+
+        function createSparkles() {
+            const envelope = document.querySelector('.envelope');
+            const rect = envelope.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                
+                // Random position around the envelope
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 400 + 200;
+                const x = centerX + Math.cos(angle) * distance;
+                const y = centerY + Math.sin(angle) * distance;
+                
+                sparkle.style.left = x + 'px';
+                sparkle.style.top = y + 'px';
+                
+                document.body.appendChild(sparkle);
+                
+                // Remove sparkle after animation
+                setTimeout(() => sparkle.remove(), 700);
             }
-            document.body.classList.toggle('open');
         }
+
+        function getRandomCard() {
+            return cards[Math.floor(Math.random() * cards.length)];
+        }
+
+        function toggleEnvelope(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const wasOpen = document.body.classList.contains('open');
+    document.body.classList.toggle('open');
+    
+    if (!wasOpen) {
+        createSparkles(); // Add sparkle effect
+        const randomCard = getRandomCard();
+        document.getElementById("cardImage").src = randomCard.img;
+        document.getElementById("cardMessage").innerText = randomCard.message;
+        document.getElementById("cardMessage").style.color = randomCard.color; // Apply color
+        document.getElementById("cardMessage").style.fontFamily = '"Shadows Into Light", cursive'; // Apply font
+    }
+}
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heartSymbols = ['❤️', '💖', '💝', '💕', '💗', '♡', '🫶', '💜', '💞'];
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 10 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        createHearts();
     </script>
 </body>
 </html>
