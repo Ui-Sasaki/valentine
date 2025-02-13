@@ -16,6 +16,28 @@
             background-color: pink;
             overflow: hidden;
         }
+        .valentine-message {
+            font-size: 28px;
+            font-weight: bold;
+            animation: fadeIn 2s;
+            color: rgb(255, 10, 10);
+            position: absolute;
+            top: 10%;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+      
+        .created-by {
+            position: absolute;
+            bottom: 10px;
+            font-size: 18px;
+            position: center;
+            color: rgba(139, 0, 0, 0.8);
+            font-family: "Shadows Into Light", cursive;
+            opacity: 0.8;
+            animation: fadeIn 2s ease-in-out;
+        }
+
         .message {
             font-size: 24px;
             font-weight: bold;
@@ -60,6 +82,7 @@
             clip-path: polygon(0 0, 100% 0, 50% 100%);
             transition: transform 0.8s ease-in-out;
         }
+
         .card {
             position: absolute;
             width: 280px;
@@ -92,6 +115,21 @@
             height: 120px;
             margin-bottom: 10px;
         }
+
+        .heart-sticker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+
+        .open .heart-sticker {
+            opacity: 0; /* Disappears when opened */
+        }
+
         .open .envelope {
             opacity: 0;
         }
@@ -105,6 +143,11 @@
         .open .message {
             opacity: 0;
         }
+        
+        .open .valentine-message {
+            opacity: 0;
+        }
+
         .hearts {
             position: fixed;
             width: 100%;
@@ -116,7 +159,7 @@
             position: absolute;
             font-size: 20px;
             animation: float 6s linear infinite;
-            opacity: 0.6;
+            opacity: 1.5;
         }
         @keyframes float {
             0% {
@@ -128,6 +171,25 @@
                 opacity: 0;
             }
         }
+        .twinkling-star {
+            position: absolute;
+            font-size: 15px;
+            color: white;
+            opacity: 0;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
 
         /* New simple sparkle styles */
         .sparkle {
@@ -152,16 +214,23 @@
     </style>
 </head>
 <body>
+
+    <div class="valentine-message" id="valentineMessage" onclick="hideMessage()">💝 Happy Valentine's! This is my gift to you! 💝</div>
+
     <div class="hearts" id="hearts"></div>
-    <div class="message">Open for a surprise! ↓</div>
+    <div class="message">Open for a message! ↓</div>
     <div class="container" onclick="toggleEnvelope()">
         <div class="envelope">
             <div class="flap"></div>
+            <div class="heart-sticker" id="heartSticker">⭐️</div>
+        </div>
         </div>
         <div class="card" id="card" onclick="toggleEnvelope(event)">
             <img id="cardImage" src="" alt="Valentine GIF">
             <p id="cardMessage"></p>
         </div>
+
+        <div class="created-by">Created by: Ui:)</div> 
     </div>
 
     <script>
@@ -235,22 +304,45 @@
     }
 }
 
+    window.onload = function () {
+    createHearts();
+    setInterval(createHearts, 1500);  // Keeps generating hearts every 1.5s
+    };
         function createHearts() {
             const heartsContainer = document.getElementById('hearts');
-            const heartSymbols = ['❤️', '💖', '💝', '💕', '💗', '♡', '🫶', '💜', '💞'];
+            const heartSymbols = ['❤️', '💖', '💝', '💕', '💗', '♡', '🫶', '💜', '💞', ];
             
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 40; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'heart';
                 heart.style.left = Math.random() * 100 + 'vw';
                 heart.style.animationDelay = Math.random() * 10 + 's';
                 heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.bottom = '-10vh'; // Start BELOW screen
                 heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
                 heartsContainer.appendChild(heart);
             }
         }
 
         createHearts();
+
+
+        function createTwinklingStars() {
+            for (let i = 0; i < 10; i++) {
+                const star = document.createElement('div');
+                star.className = 'twinkling-star';
+                star.innerText = '✨';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 5000);
+            }
+        }
+
+        setInterval(createFloatingHearts, 2000);
+        setInterval(createTwinklingStars, 3000);
+
     </script>
 </body>
 </html>
