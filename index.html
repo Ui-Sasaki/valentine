@@ -28,17 +28,17 @@
         }
         .heart-sticker {
             position: absolute;
-            top: 40%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 30px;
+            font-size: 60px;
             transition: opacity 0.5s ease-in-out;
         }
 
         .open .heart-sticker {
             opacity: 0; /* Disappears when opened */
         }
-        
+
         .created-by {
             position: absolute;
             bottom: 10px;
@@ -128,20 +128,11 @@
             margin-bottom: 10px;
         }
 
-        .heart-sticker {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 60px;
-            transition: opacity 0.5s ease-in-out;
-        }
-
 
         .open .created-by {
             opacity: 0; /* Disappears when opened */
         }
-        
+
         .open .heart-sticker {
             opacity: 0; /* Disappears when opened */
         }
@@ -232,7 +223,6 @@
 <body>
 
     <div class="valentine-message" id="valentineMessage" onclick="hideMessage()">💝 Happy Valentine's! This is my gift to you! 💝</div>
-    <div class="heart-sticker" id="heartSticker">❤️</div>
     <div class="hearts" id="hearts"></div>
     <div class="message">Open for a message! ↓</div>
     <div class="container" onclick="toggleEnvelope()">
@@ -322,7 +312,7 @@
 
     window.onload = function () {
     createHearts();
-    setInterval(createHearts, 1500);  // Keeps generating hearts every 1.5s
+    setInterval(createHearts, 4000);  
     };
         function createHearts() {
             const heartsContainer = document.getElementById('hearts');
